@@ -5281,6 +5281,7 @@ object *eval (object *form, object *env) {
   // Evaluate the parameters - result in head
   object *fname = car(form);
   int TCstart = TC;
+  push(form, GCStack);
   object *head = cons(eval(fname, env), NULL);
   push(head, GCStack); // Don't GC the result list
   object *tail = head;
@@ -5304,6 +5305,7 @@ object *eval (object *form, object *env) {
     checkminmax(name, nargs);
     object *result = ((fn_ptr_type)lookupfn(name))(args, env);
     pop(GCStack);
+    pop(GCStack);
     return result;
   }
 
@@ -5311,6 +5313,7 @@ object *eval (object *form, object *env) {
 
     if (issymbol(car(function), LAMBDA)) {
       form = closure(TCstart, fname->name, NULL, cdr(function), args, &env);
+      pop(GCStack);
       pop(GCStack);
       int trace = tracing(fname->name);
       if (trace) {
@@ -5331,6 +5334,7 @@ object *eval (object *form, object *env) {
       function = cdr(function);
       form = closure(TCstart, fname->name, car(function), cdr(function), args, &env);
       pop(GCStack);
+      pop(GCStack);
       TC = 1;
       goto EVAL;
     }
@@ -5340,6 +5344,7 @@ object *eval (object *form, object *env) {
       if (nargs<n) error2(fname->name, toofewargs);
       if (nargs>n) error2(fname->name, toomanyargs);
       uint32_t entry = startblock(car(function)) + 1;
+      pop(GCStack);
       pop(GCStack);
       return call(entry, n, args, env);
     }
