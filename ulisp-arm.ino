@@ -5,7 +5,361 @@
 */
 
 // Lisp Library
-const char LispLibrary[] PROGMEM = "";
+const char LispLibrary[] PROGMEM = ""
+      "(defun tak (x y z)\n"
+      "  (if (not (< y x))\n"
+      "    z\n"
+      "    (tak\n"
+      "     (tak (1- x) y z)\n"
+      "     (tak (1- y) z x)\n"
+      "     (tak (1- z) x y))))\n"
+      "(defun fib (n)\n"
+      "  (if (< n 3) 1\n"
+      "    (+ (fib (- n 1)) (fib (- n 2)))))\n"
+      "\n"
+      "(defvar ers 0)\n"
+      "\n"
+      "(defun teq (a b)\n"
+      "  (cond\n"
+      "   ((and (stringp a) (stringp b)) (string= a b))\n"
+      "   ((and (atom a) (atom b)) (eq a b))\n"
+      "   ((null a) nil)\n"
+      "   ((null b) nil)\n"
+      "   (t (and \n"
+      "       (teq (car a) (car b)) \n"
+      "       (teq (cdr a) (cdr b))))))\n"
+      "\n"
+      "(defun aeq (tst x y)\n"
+      "  (unless (teq x y)\n"
+      "    (incf ers)\n"
+      "    (princ tst) (princ '=) (princ x) (princ '/) y))\n"
+      "\n"
+      //"; Arithmetic"
+      ""
+      "(aeq '* 9 (* -3 -3))"
+      "(aeq '* 32580 (* 180 181))"
+      "(aeq '* 1 (*))"
+      "(aeq '+ 32767 (+ 32765 1 1))"
+      "(aeq '+ 0 (+))"
+      "(aeq '+ -2 (+ -1 -1))"
+      "(aeq '- -4 (- 4))"
+      "(aeq '- 0 (- 4 2 1 1))"
+      "(aeq '/ 2 (/ 60 10 3))"
+      "(aeq '1+ 2 (1+ 1))"
+      "(aeq '1+ 0 (1+ -1))"
+      "(aeq '1- 0 (1- 1))"
+
+      // "; Comparisons"
+    ""
+      "(aeq '< t (< -32768 32767))"
+      "(aeq '< t (< -1 0))"
+      "(aeq '< t (< 1 2 3))"
+      "(aeq '< t (< 1))"
+      "(aeq '< nil (< 1 3 2))"
+      "(aeq '< nil (< -1 -2))"
+      "(aeq '< nil (< 10 10))"
+      "(aeq '<= t (<= 10 10))"
+      "(aeq '= t (= 32767 32767))"
+      "(aeq '>= t (>= 10 10))"
+      "(aeq '>= nil (>= 9 10))"
+      "(aeq '/= t (/= 1))"
+      "(aeq '/= nil (/= 1 2 1))"
+      "(aeq '/= nil (/= 1 2 3 1))"
+      "(aeq '/= t (/= 1 2 3 4))"
+      "(aeq 'plusp t (plusp 1))"
+      "(aeq 'plusp nil (plusp 0))"
+      "(aeq 'plusp nil (plusp -1))"
+      "(aeq 'minusp nil (minusp 1))"
+      "(aeq 'minusp nil (minusp 0))"
+      "(aeq 'minusp t (minusp -1))"
+      "(aeq 'zerop nil (zerop 1))"
+      "(aeq 'zerop t (zerop 0))"
+      "(aeq 'zerop nil (zerop -1))"
+      "(aeq 'evenp nil (evenp 1))"
+      "(aeq 'evenp t (evenp 0))"
+      "(aeq 'evenp nil (evenp -1))"
+      "(aeq 'oddp t (oddp 1))"
+      "(aeq 'oddp nil (oddp 0))"
+      "(aeq 'oddp t (oddp -1))"
+
+      //; Maths functions
+      ""
+      "(aeq 'abs 10 (abs 10))"
+      "(aeq 'abs 10 (abs -10))"
+      "(aeq 'max 45 (max 23 45))"
+      "(aeq 'max -23 (max -23 -45))"
+      "(aeq 'min 23 (min 23 45))"
+      "(aeq 'min -45 (min -23 -45))"
+      "(aeq 'zerop t (zerop 0))"
+      "(aeq 'zerop nil (zerop 32767))"
+      "(aeq 'mod 1 (mod 13 4))"
+      "(aeq 'mod 3 (mod -13 4))"
+      "(aeq 'mod -3 (mod 13 -4))"
+      "(aeq 'mod -1 (mod -13 -4))"
+
+      //; Number entry
+      ""
+      "(aeq 'hex -1 #xFFFFFFFF)"
+      "(aeq 'hex 1 #x0001)"
+      "(aeq 'hex 4112 #x1010)"
+      "(aeq 'oct 511 #o777)"
+      "(aeq 'oct 1 #o1)"
+      "(aeq 'oct 65535 #o177777)"
+      "(aeq 'bin -1 #b11111111111111111111111111111111)"
+      "(aeq 'bin 10 #b1010)"
+      "(aeq 'bin 0 #b0)"
+      "(aeq 'hash 12 #'12)"
+      "(aeq 'hash 6 (funcall #'(lambda (x) (+ x 2)) 4))"
+
+      //; Boolean
+      ""
+      "(aeq 'and 7 (and t t 7))"
+      "(aeq 'and nil (and t nil 7))"
+      "(aeq 'or t (or t nil 7))"
+      "(aeq 'or 1 (or 1 2 3))"
+      "(aeq 'or nil (or nil nil nil))"
+      "(aeq 'or 'a (or 'a 'b 'c))"
+
+      //; Bitwise
+      ""
+      "(aeq 'logand -1 (logand))"
+      "(aeq 'logand 170 (logand #xAA))"
+      "(aeq 'logand 0 (logand #xAAAA #x5555))"
+      "(aeq 'logior 0 (logior))"
+      "(aeq 'logior 170 (logior #xAA))"
+      "(aeq 'logior #xFFFF (logior #xAAAA #x5555))"
+      "(aeq 'logxor 0 (logxor))"
+      "(aeq 'logxor 170 (logior #xAA))"
+      "(aeq 'logxor 255 (logxor #xAAAA #xAA55))"
+      "(aeq 'lognot -43691 (lognot #xAAAA))"
+      "(aeq 'ash 492 (ash 123 2))"
+      "(aeq 'ash 65535 (ash #xFFFF 0))"
+      "(aeq 'ash 16383 (ash #xFFFF -2))"
+      "(aeq 'ash 262140 (ash #xFFFF 2))"
+      "(aeq 'ash 8191 (ash #x7FFF -2))"
+      "(aeq 'logbitp t (logbitp 0 1))"
+      "(aeq 'logbitp t (logbitp 1000 -1))"
+      "(aeq 'logbitp nil (logbitp 1000 0))"
+
+      //; Tests
+      ""
+      "(aeq 'atom t (atom nil))"
+      "(aeq 'atom t (atom t))"
+      "(aeq 'atom nil (atom '(1 2)))"
+      "(aeq 'consp nil (consp 'b))"
+      "(aeq 'consp t (consp '(a b)))"
+      "(aeq 'consp nil (consp nil))"
+      "(aeq 'listp nil (listp 'b))"
+      "(aeq 'listp t (listp '(a b)))"
+      "(aeq 'listp t (listp nil))"
+      "(aeq 'numberp t (numberp (+ 1 2)))"
+      "(aeq 'numberp nil (numberp 'b))"
+      "(aeq 'numberp nil (numberp nil))"
+      "(aeq 'symbolp t (symbolp 'b))"
+      "(aeq 'symbolp nil (symbolp 3))"
+      "(aeq 'symbolp nil (symbolp nil))"
+      "(aeq 'streamp nil (streamp 'b))"
+      "(aeq 'streamp nil (streamp nil))"
+
+      //; cxr operations
+      ""
+      "(aeq 'car 'a (car '(a b c)))"
+      "(aeq 'car nil (car nil))"
+      "(aeq 'first 'a (first '(a b c)))"
+      "(aeq 'first nil (first nil))"
+      "(aeq 'cdr 'b (cdr '(a . b)))"
+      "(aeq 'cdr 'b (car (cdr '(a b))))"
+      "(aeq 'cdr nil (cdr nil))"
+      "(aeq 'rest 'b (rest '(a . b)))"
+      "(aeq 'rest 'b (car (rest '(a b))))"
+      "(aeq 'rest nil (rest nil))"
+      "(aeq 'caaar 'a (caaar '(((a)))))"
+      "(aeq 'caaar 'nil (caaar nil))"
+      "(aeq 'caadr 'b (caadr '(a (b))))"
+      "(aeq 'caadr 'nil (caadr nil))"
+      "(aeq 'caar 'a (caar '((a))))"
+      "(aeq 'caar 'nil (caar nil))"
+      "(aeq 'cadar 'c (cadar '((a c) (b))))"
+      "(aeq 'cadar 'nil (cadar nil))"
+      "(aeq 'caddr 'c (caddr '(a b c)))"
+      "(aeq 'caddr 'nil (caddr nil))"
+      "(aeq 'cadr 'b (cadr '(a b)))"
+      "(aeq 'second 'nil (second '(a)))"
+      "(aeq 'second 'b (second '(a b)))"
+      "(aeq 'cadr 'nil (cadr '(a)))"
+      "(aeq 'caddr 'c (caddr '(a b c)))"
+      "(aeq 'caddr 'nil (caddr nil))"
+      "(aeq 'third 'c (third '(a b c)))"
+      "(aeq 'third 'nil (third nil))"
+      "(aeq 'cdaar 'b (car (cdaar '(((a b)) b c))))"
+      "(aeq 'cdaar 'nil (cdaar nil))"
+      "(aeq 'cdadr 'c (car (cdadr '(a (b c)))))"
+      "(aeq 'cdadr 'nil (cdadr nil))"
+      "(aeq 'cdar 'b (car (cdar '((a b c)))))"
+      "(aeq 'cdar 'nil (cdar nil))"
+      "(aeq 'cddar 'c (car (cddar '((a b c)))))"
+      "(aeq 'cddar 'nil (cddar nil))"
+      "(aeq 'cdddr 'd (car (cdddr '(a b c d))))"
+      "(aeq 'cdddr nil (car (cdddr '(a b c))))"
+      "(aeq 'cddr 'c (car (cddr '(a b c))))"
+      "(aeq 'cddr 'nil (cddr '(a)))"
+
+      //; List operations
+      ""
+      "(aeq 'cons 'a (car (cons 'a 'b)))"
+      "(aeq 'cons nil (car (cons nil 'b)))"
+      "(aeq 'append 6 (length (append '(a b c) '(d e f))))"
+      "(aeq 'append nil (append nil nil))"
+      "(aeq 'append '(1 2 3 4 5 . 6) (append '(1 2 3) '(4 5 . 6)))"
+      "(aeq 'list nil (car (list nil)))"
+      "(aeq 'list 'a (car (list 'a 'b 'c)))"
+      "(aeq 'reverse 'c (car (reverse '(a b c))))"
+      "(aeq 'reverse nil (reverse nil))"
+      "(aeq 'length 0 (length nil))"
+      "(aeq 'length 4 (length '(a b c d)))"
+      "(aeq 'length 2 (length '(nil nil)))"
+      "(aeq 'assoc nil (assoc 'b nil))"
+      "(aeq 'assoc nil (assoc 'b '(nil nil)))"
+      "(aeq 'assoc '(b . 12) (assoc 'b '((a . 10) (b . 12))))"
+      "(aeq 'assoc '(nil . 12) (assoc nil '((a . 10) (nil . 12))))"
+      "(aeq 'assoc '(b) (assoc 'b '((a . 10) (b))))"
+      "(aeq 'mapc 2 (cadr (mapc + '(1 2 3 4))))"
+      "(aeq 'mapc 10 (let ((x 0)) (mapc (lambda (y) (incf x y)) '(1 2 3 4)) x))"
+      "(aeq 'mapcar '(1 4 9 16) (mapcar (lambda (x) (* x x)) '(1 2 3 4)))"
+      "(aeq 'mapcar '(1 4 9 16) (mapcar * '(1 2 3 4) '(1 2 3 4)))"
+      "(aeq 'mapcar '(1 4 9 16 25) (mapcar (lambda (x) (* x x)) '(1 2 3 4 5)))"
+      "(aeq 'mapcan '(1 4 2 5 3 6) (mapcan #'list '(1 2 3) '(4 5 6)))"
+      "(aeq 'mapcan '(1 3 2 4) (mapcan list '(1 2) '(3 4)))"
+      "(aeq 'mapcan '(1 5 2 6 3 7 4 8) (mapcan list '(1 2 3 4) '(5 6 7 8)))"
+      //"(aeq 'mapcan '(1 2 3 . 4) (mapcan (lambda (x) x) '((1) (2) (3 . 4))))"
+      //"(aeq 'mapcan '(2 3 . 4) (mapcan (lambda (x) x) '(nil (2) (3 . 4))))"
+
+      //; let/let*/lambda
+      ""
+      "(aeq 'let 7 (let ((x 7)) (let ((x 6) (y x)) y)))"
+      "(aeq 'let* 6 (let* ((x 7)) (let* ((x 6) (y x)) y)))"
+      "(aeq 'let t (let ((x t) (y nil) (w) z) (and x (null y) (null w) (null "
+      "z))))"
+      "(aeq 'let* t (let* ((x t) (y nil) (w) z) (and x (null y) (null w) (null "
+      "z))))"
+      "(aeq 'lambda 2 ((lambda (x y) (setq y x) y) 2 3))"
+      "(aeq 'lambda 9 ((lambda (&rest x) (apply + x)) 2 3 4))"
+      "(aeq 'lambda 8 ((lambda (x &optional (y 4)) (* x y)) 2))"
+      "(aeq 'lambda 6 ((lambda (x &optional (y 4)) (* x y)) 2 3))"
+      "(aeq 'lambda 6 ((lambda (x &optional y) (* x y)) 2 3))"
+
+      //; loops and control
+      ""
+      "(aeq 'progn 8 (let ((x 6)) (progn (incf x) (incf x))))"
+      "(aeq 'dotimes 21 (let ((x 6)) (dotimes (y 6 x) (setq x (+ x y)))))"
+      "(aeq 'dotimes 6 (let ((x 6)) (dotimes (y 6 y) (setq x (+ x y)))))"
+      "(aeq 'dotimes 0 (let ((x 6)) (dotimes (y 0 y) (setq x (+ x y)))))"
+      "(aeq 'dolist 6 (let ((x 0)) (dolist (y '(1 2 3) x) (setq x (+ x y)))))"
+      "(aeq 'dolist nil (let ((x 0)) (dolist (y '(1 2 3)) (setq x (+ x y)))))"
+      "(aeq 'dolist nil (let ((x 0)) (dolist (y '(1 2 3) y) (setq x (+ x y)))))"
+      "(aeq 'loop 6 (let ((x 0)) (loop (when (= x 6) (return x)) (incf x))))"
+      "(aeq 'loop 6 (let ((x 0)) (loop (unless (< x 6) (return x)) (incf x))))"
+
+      //; conditions
+      ""
+      "(aeq 'if 3 (let ((a 2)) (if (= a 2) 3 4)))"
+      "(aeq 'if 4 (let ((a 2)) (if (= a 3) 3 4)))"
+      "(aeq 'if 4 (let ((a 3)) (if (= a 3) 4)))"
+      "(aeq 'if nil (let ((a 4)) (if (= a 3) 4)))"
+      "(aeq 'when 4 (let ((a 3)) (when (= a 3) 4)))"
+      "(aeq 'when nil (let ((a 2)) (when (= a 3) 4)))"
+      "(aeq 'unless nil (let ((a 3)) (unless (= a 3) 4)))"
+      "(aeq 'unless 4 (let ((a 2)) (unless (= a 3) 4)))"
+      "(aeq 'cond 8 (let ((a 2)) (cond ((= a 3) 7) ((= a 2) 8) (t 9))))"
+      "(aeq 'cond 9 (let ((a 1)) (cond ((= a 3) 7) ((= a 2) 8) (9))))"
+      "(aeq 'cond nil (let ((a 1)) (cond ((= a 3) 7) ((= a 2) 8))))"
+      "(aeq 'case 222 (let ((j 1)) (case j ((0 1) 111 222) ((t) 333) (t 444))))"
+      "(aeq 'case 333 (let ((j t)) (case j ((0 1) 111 222) ((t) 333) (t 444))))"
+      "(aeq 'case 444 (let ((j 2)) (case j ((0 1) 111 222) ((t) 333) (t 444))))"
+
+      //; eval/funcall/apply
+      ""
+      "(aeq 'funcall 10 (funcall + 1 2 3 4))"
+      "(aeq 'funcall 'a (funcall car '(a b c d)))"
+      "(aeq 'funcall 3 (let ((x 0)) (funcall (lambda (y) (incf x y)) 3) x))"
+      "(aeq 'apply 10 (apply + '(1 2 3 4)))"
+      "(aeq 'apply 13 (apply + 1 2 '(1 2 3 4)))"
+      "(aeq 'eval 10 (eval (list + 1 2 3 4)))"
+      "(aeq 'eval nil (eval nil))"
+      "(aeq 'funcall 999 (let ((x 999)) (funcall (lambda (x) x) x)))"
+      "(aeq 'funcall 4 (let ((x2 (lambda (fun) (lambda (x) (funcall fun "
+      "(funcall fun x)))))) (funcall (x2 '1+) 2)))"
+      "(aeq 'funcall 4 (let ((x2 (lambda (fun) (lambda (x) (fun (fun x)))))) "
+      "((x2 '1+) 2)))"
+
+      //; in-place operations
+      ""
+      "(aeq 'incf 6 (let ((x 0)) (+ (incf x) (incf x) (incf x))))"
+      "(aeq 'incf 12 (let ((x 0)) (+ (incf x 2) (incf x 2) (incf x 2))))"
+      "(aeq 'incf 36 (let ((n 10)) (let* ((f1 (lambda () (incf n) n))) (+ "
+      "(funcall f1) (funcall f1) (funcall f1)))))"
+      "(aeq 'setf 9 (let ((a 3)) (setf a (* a 3))))"
+      "(aeq 'setf 9 (let ((a '(2 3))) (setf (car a) 6) (apply + a)))"
+      "(aeq 'setf 12 (let ((a '(2 3))) (setf (cdr a) '(6)) (apply * a)))"
+      "(aeq 'setf 88 (let ((a '(2 3 4))) (setf (nth 1 a) 11) (apply * a)))"
+
+      //; recursion
+      ""
+      "(aeq 'lambda 55 (let ((fib (lambda (n) (if (< n 3) 1 (+ (fib (- n 1)) "
+      "(fib (- n 2))))))) (fib 10)))"
+      "(aeq 'lambda 5040 (let ((f (lambda (n) (if (= n 0) 1 (* n (f (- n "
+      "1))))))) (f 7)))"
+      "(aeq 'lambda 10 (let ((a 0)) (let ((f (lambda (n) (incf a n) (when (> n "
+      "0) (f (1- n)))))) (f 4)) a))"
+
+      //; strings
+      ""
+      "(aeq 'stringp t (stringp \"hello\"))"
+      "(aeq 'stringp nil (stringp 5))"
+      "(aeq 'stringp nil (stringp '(a b)))"
+      "(aeq 'numberp nil (numberp \"hello\"))"
+      "(aeq 'atom t (atom \"hello\"))"
+      "(aeq 'consp nil (consp \"hello\"))"
+      "(aeq 'eq nil (eq \"hello\" \"hello\"))"
+      "(aeq 'eq t (let ((a \"hello\")) (eq a a)))"
+      "(aeq 'length 0 (length \"\"))"
+      "(aeq 'length 5 (length \"hello\"))"
+      "(aeq 'subseq \"hello\" (subseq \"hellofromdavid\" 0 5))"
+      "(aeq 'subseq \"fromdavid\" (subseq \"hellofromdavid\" 5))"
+      "(aeq 'concatenate t (string= (concatenate 'string \"A\" \"B\") \"AB\"))"
+      "(aeq 'concatenate 3 (length (concatenate 'string \"A\" \"BC\")))"
+      "(aeq 'concatenate 0 (length (concatenate 'string)))"
+      "(aeq 'concatenate \"ABCD\" (concatenate 'string \"AB\" \"CD\"))"
+      "(aeq 'concatenate \"ABCDE\" (concatenate 'string \"AB\" \"CDE\"))"
+      "(aeq 'concatenate \"ABCDE\" (concatenate 'string \"ABC\" \"DE\"))"
+      "(aeq 'concatenate \"ABCDEF\" (concatenate 'string \"ABC\" \"DEF\"))"
+      "(aeq 'string< nil (string< \"cat\" \"cat\"))"
+      "(aeq 'string< t (string< \"cat\" \"cat \"))"
+      "(aeq 'string< t (string< \"fish\" \"fish \"))"
+      "(aeq 'string> nil (string> \"cat\" \"cat\"))"
+      "(aeq 'string> t (string> \"cat \" \"cat\"))"
+
+      //; characters
+      ""
+      "(aeq 'char-code 97 (char-code #\\a))"
+      "(aeq 'char-code 13 (char-code #\\return))"
+      "(aeq 'code-char #\\return (code-char 13))"
+      "(aeq 'char-code #\\a (code-char 97))"
+      "(aeq 'eq t (eq #\\b #\\b))"
+      "(aeq 'eq nil (eq #\\b #\\B))"
+      "(aeq 'numberp nil (numberp #\\b))"
+      "(aeq 'characterp t (characterp #\\b))"
+      "(aeq 'char #\\o (char \"hello\" 4))"
+      "(aeq 'char #\\h (char \"hello\" 0))"
+
+      //; read-from-string
+      ""
+      "(aeq 'read-from-string 123 (read-from-string \"123\"))"
+      "(aeq 'read-from-string 144 (eval (read-from-string \"((lambda (x) (* x "
+      "x)) 12)\")))"
+      "(aeq 'read-from-string t (eval (read-from-string \"(eq (+ 2 3) 5)\")))"
+      "(aeq 'read-from-string nil (read-from-string \"()\"))"
+      "";
 
 // Compile options
 
@@ -14,10 +368,10 @@ const char LispLibrary[] PROGMEM = "";
 // #define printgcs
 // #define sdcardsupport
 // #define gfxsupport
-// #define lisplibrary
+#define lisplibrary
 #define assemblerlist
-// #define lineeditor
-// #define vt100
+#define lineeditor
+#define vt100
 
 // Includes
 
@@ -240,7 +594,7 @@ typedef int PinMode;
   #define CODESIZE 256                    /* Bytes */
   #define STACKDIFF 1200
   #define CPU_NRF52840
-  
+
 #elif defined(ARDUINO_NRF52840_CLUE)
   #define WORKSPACESIZE 19456-SDSIZE      /* Objects (8*bytes) */
   #define DATAFLASHSIZE 2048000           /* 2 MBytes */
@@ -273,9 +627,19 @@ typedef int PinMode;
   #undef MEMBANK
   #define MEMBANK DMAMEM
 
+#elif defined (ARDUINO_NUCLEO_L476RG)
+  #define WORKSPACESIZE 2000              /* Objects (8*bytes) */
+  #define SYMBOLTABLESIZE 512             /* Bytes */
+  #define CODESIZE 64                     /* Bytes */
+  #define STACKDIFF 320
+  #define Serial1 Serial
 #else
 #error "Board not supported!"
 #endif
+
+// just for demonstration
+#undef WORKSPACESIZE
+#define WORKSPACESIZE 2000
 
 object Workspace[WORKSPACESIZE] WORDALIGNED MEMBANK;
 char SymbolTable[SYMBOLTABLESIZE];
@@ -322,7 +686,7 @@ int builtin (char* n);
 void errorsub (symbol_t fname, PGM_P string) {
   pfl(pserial); pfstring(PSTR("Error: "), pserial);
   if (fname) {
-    pserial('\''); 
+    pserial('\'');
     pstring(symbolname(fname), pserial);
     pfstring(PSTR("' "), pserial);
   }
@@ -458,7 +822,7 @@ void markobject (object *obj) {
   object* arg = car(obj);
   unsigned int type = obj->type;
   mark(obj);
-  
+
   if (type >= PAIR || type == ZZERO) { // cons
     markobject(arg);
     obj = cdr(obj);
@@ -469,7 +833,7 @@ void markobject (object *obj) {
     obj = cdr(obj);
     goto MARK;
   }
-  
+
   if (type == STRING) {
     obj = cdr(obj);
     while (obj != NULL) {
@@ -511,7 +875,7 @@ void movepointer (object *from, object *to) {
     object *obj = &Workspace[i];
     unsigned int type = (obj->type) & ~MARKBIT;
     if (marked(obj) && (type >= ARRAY || type==ZZERO)) {
-      if (car(obj) == (object *)((uintptr_t)from | MARKBIT)) 
+      if (car(obj) == (object *)((uintptr_t)from | MARKBIT))
         car(obj) = (object *)((uintptr_t)to | MARKBIT);
       if (cdr(obj) == from) cdr(obj) = to;
     }
@@ -1077,7 +1441,7 @@ object **arrayref (object *array, int index, int size) {
   }
   return p;
 }
-  
+
 object **getarray (symbol_t name, object *array, object *subs, object *env, int *bit) {
   int index = 0, size = 1, s;
   *bit = -1;
@@ -1124,7 +1488,7 @@ object *readarray (int d, object *args) {
     if (dims == NULL) { dims = cons(number(l), NULL); head = dims; }
     else { cdr(dims) = cons(number(l), NULL); dims = cdr(dims); }
     size = size * l;
-    if (list != NULL) list = car(list); 
+    if (list != NULL) list = car(list);
   }
   object *array = makearray(0, head, NULL, false);
   rslice(array, size, 0, head, args);
@@ -1269,7 +1633,7 @@ char nthchar (object *string, int n) {
 }
 
 int gstr () {
-  if (LastChar) { 
+  if (LastChar) {
     char temp = LastChar;
     LastChar = 0;
     return temp;
@@ -1310,7 +1674,7 @@ object *findvalue (object *var, object *env) {
 }
 
 // Handling closures
-  
+
 object *closure (int tc, symbol_t name, object *state, object *function, object *args, object **env) {
   int trace = 0;
   if (name) trace = tracing(name);
@@ -1339,16 +1703,16 @@ object *closure (int tc, symbol_t name, object *state, object *function, object 
   while (params != NULL) {
     object *value;
     object *var = first(params);
-    if (symbolp(var) && var->name == OPTIONAL) optional = true;  
+    if (symbolp(var) && var->name == OPTIONAL) optional = true;
     else {
       if (consp(var)) {
         if (!optional) error(name, PSTR("invalid default value"), var);
         if (args == NULL) value = eval(second(var), *env);
         else { value = first(args); args = cdr(args); }
         var = first(var);
-        if (!symbolp(var)) error(name, PSTR("illegal optional parameter"), var); 
+        if (!symbolp(var)) error(name, PSTR("illegal optional parameter"), var);
       } else if (!symbolp(var)) {
-        error2(name, PSTR("illegal parameter"));     
+        error2(name, PSTR("illegal parameter"));
       } else if (var->name == AMPREST) {
         params = cdr(params);
         var = first(params);
@@ -1356,16 +1720,19 @@ object *closure (int tc, symbol_t name, object *state, object *function, object 
         args = NULL;
       } else {
         if (args == NULL) {
-          if (optional) value = nil; 
+          if (optional) value = nil;
           else error2(name, toofewargs);
         } else { value = first(args); args = cdr(args); }
       }
       push(cons(var,value), *env);
       if (trace) { pserial(' '); printobject(value, pserial); }
     }
-    params = cdr(params);  
+    params = cdr(params);
   }
-  if (args != NULL) error2(name, toomanyargs);
+  if (args != NULL) {
+    printobject(args, pserial); pfl(pserial);
+    error2(name, toomanyargs);
+  }
   if (trace) { pserial(')'); pln(pserial); }
   // Do an implicit progn
   if (tc) push(nil, *env);
@@ -1498,7 +1865,7 @@ inline int serial1read () { while (!Serial1.available()) testescape(); return Se
 #if defined(sdcardsupport)
 File SDpfile, SDgfile;
 inline int SDread () {
-  if (LastChar) { 
+  if (LastChar) {
     char temp = LastChar;
     LastChar = 0;
     return temp;
@@ -1605,7 +1972,7 @@ pfun_t pstreamfun (object *args) {
     #elif !defined(CPU_NRF51822) && !defined(ARDUINO_FEATHER_F405)
     else if (address == 1) pfun = serial1write;
     #endif
-  }   
+  }
   else if (streamtype == STRINGSTREAM) {
     pfun = pstr;
   }
@@ -1763,7 +2130,7 @@ void sleep (int secs) {
   while(WDT->STATUS.bit.SYNCBUSY);       // Sync CTRL write
 
   SysTick->CTRL = 0;                     // Stop SysTick interrupts
-  
+
   while (secs > 0) {
     WDT->CLEAR.reg = WDT_CLEAR_CLEAR_KEY;// Clear watchdog interval
     while(WDT->STATUS.bit.SYNCBUSY);
@@ -1791,7 +2158,7 @@ void pcount (char c) {
   if (c == '\n') PrintCount++;
   PrintCount++;
 }
-  
+
 uint8_t atomwidth (object *obj) {
   PrintCount = 0;
   printobject(obj, pcount);
@@ -1799,7 +2166,7 @@ uint8_t atomwidth (object *obj) {
 }
 
 uint8_t hexwidth (object *obj) {
-  PrintCount = 0;      
+  PrintCount = 0;
   pinthex(obj->integer, pcount);
   return PrintCount;
 }
@@ -1834,7 +2201,7 @@ void superprint (object *form, int lm, pfun_t pfun) {
 }
 
 const int ppspecials = 18;
-const char ppspecial[ppspecials] PROGMEM = 
+const char ppspecial[ppspecials] PROGMEM =
   { DOTIMES, DOLIST, IF, SETQ, TEE, LET, LETSTAR, LAMBDA, WHEN, UNLESS, WITHI2C, WITHSERIAL, WITHSPI, WITHSDCARD, WITHGFX, WITHOUTPUTTOSTRING, FORMILLIS };
 
 void supersub (object *form, int lm, int super, pfun_t pfun) {
@@ -1844,8 +2211,8 @@ void supersub (object *form, int lm, int super, pfun_t pfun) {
     int name = arg->name;
     if (name == DEFUN || name == DEFCODE) special = 2;
     else for (int i=0; i<ppspecials; i++) {
-      if (name == ppspecial[i]) { special = 1; break; }   
-    } 
+      if (name == ppspecial[i]) { special = 1; break; }
+    }
   }
   while (form != NULL) {
     if (atom(form)) { pfstring(PSTR(" . "), pfun); printobject(form, pfun); pfun(')'); return; }
@@ -1854,7 +2221,7 @@ void supersub (object *form, int lm, int super, pfun_t pfun) {
     else if (!super) pfun(' ');
     else { pln(pfun); indent(lm, ' ', pfun); }
     superprint(car(form), lm, pfun);
-    form = cdr(form);   
+    form = cdr(form);
   }
   pfun(')'); return;
 }
@@ -1943,7 +2310,7 @@ int assemble (int pass, int origin, object *entries, object *env, object *pcpair
 
 object *sp_quote (object *args, object *env) {
   (void) env;
-  checkargs(QUOTE, args); 
+  checkargs(QUOTE, args);
   return first(args);
 }
 
@@ -2007,7 +2374,7 @@ object *sp_return (object *args, object *env) {
 
 object *sp_push (object *args, object *env) {
   int bit;
-  checkargs(PUSH, args); 
+  checkargs(PUSH, args);
   object *item = eval(first(args), env);
   object **loc = place(PUSH, second(args), env, &bit);
   push(item, *loc);
@@ -2016,7 +2383,7 @@ object *sp_push (object *args, object *env) {
 
 object *sp_pop (object *args, object *env) {
   int bit;
-  checkargs(POP, args); 
+  checkargs(POP, args);
   object **loc = place(POP, first(args), env, &bit);
   object *result = car(*loc);
   pop(*loc);
@@ -2027,10 +2394,10 @@ object *sp_pop (object *args, object *env) {
 
 object *sp_incf (object *args, object *env) {
   int bit;
-  checkargs(INCF, args); 
+  checkargs(INCF, args);
   object **loc = place(INCF, first(args), env, &bit);
   args = cdr(args);
-  
+
   object *x = *loc;
   object *inc = (args != NULL) ? eval(first(args), env) : NULL;
 
@@ -2073,7 +2440,7 @@ object *sp_decf (object *args, object *env) {
   checkargs(DECF, args);
   object **loc = place(DECF, first(args), env, &bit);
   args = cdr(args);
-  
+
   object *x = *loc;
   object *dec = (args != NULL) ? eval(first(args), env) : NULL;
 
@@ -2086,7 +2453,7 @@ object *sp_decf (object *args, object *env) {
     *loc = number((((*loc)->integer) & ~(1<<bit)) | newvalue<<bit);
     return number(newvalue);
   }
-  
+
   if (floatp(x) || floatp(dec)) {
     float decrement;
     float value = checkintfloat(DECF, x);
@@ -2400,12 +2767,12 @@ object *sp_defcode (object *args, object *env) {
     regn++;
     params = cdr(params);
   }
-  
+
   // Make *pc* a local variable
   object *pcpair = cons(newsymbol(pack40((char*)"*pc*\0\0")), number(0));
   push(pcpair,env);
   args = cdr(args);
-  
+
   // Make labels into local variables
   object *entries = cdr(args);
   while (entries != NULL) {
@@ -2415,7 +2782,7 @@ object *sp_defcode (object *args, object *env) {
       push(pair,env);
     }
     entries = cdr(entries);
-  } 
+  }
 
   // First pass
   int origin = 0;
@@ -2434,7 +2801,7 @@ object *sp_defcode (object *args, object *env) {
     globals = cdr(globals);
   }
   if (codesize > CODESIZE) error(DEFCODE, PSTR("not enough room for code"), var);
-  
+
   // Compact the code block, removing gaps
   origin = 0;
   object *block;
@@ -2451,7 +2818,7 @@ object *sp_defcode (object *args, object *env) {
           if (startblock(codeid) < smallest && startblock(codeid) >= origin) {
             smallest = startblock(codeid);
             block = codeid;
-          }        
+          }
         }
       }
       globals = cdr(globals);
@@ -2468,7 +2835,7 @@ object *sp_defcode (object *args, object *env) {
       block->integer = target<<16 | origin;
       origin = target;
     }
-    
+
   } while (smallest < CODESIZE);
 
   // Second pass - origin is first free location
@@ -2744,7 +3111,7 @@ object *fn_makearray (object *args, object *env) {
     object *var = first(args);
     if (issymbol(first(args), INITIALELEMENT)) def = second(args);
     else if (issymbol(first(args), ELEMENTTYPE) && issymbol(second(args), BIT)) bitp = true;
-    else error(MAKEARRAY, PSTR("argument not recognised"), var); 
+    else error(MAKEARRAY, PSTR("argument not recognised"), var);
     args = cddr(args);
   }
   if (bitp) {
@@ -2828,7 +3195,7 @@ object *fn_append (object *args, object *env) {
   (void) env;
   object *head = NULL;
   object *tail;
-  while (args != NULL) {   
+  while (args != NULL) {
     object *list = first(args);
     if (!listp(list)) error(APPEND, notalist, list);
     while (consp(list)) {
@@ -2880,7 +3247,8 @@ void mapcanfun (object *result, object **tail) {
     cdr(*tail) = result; *tail = result;
     result = cdr(result);
   }
-  if (result != NULL) error(MAPCAN, resultproper, result);
+  if (result != NULL)
+    error(MAPCAN, resultproper, result);
 }
 
 object *mapcarcan (symbol_t name, object *args, object *env, mapfun_t fun) {
@@ -2888,7 +3256,7 @@ object *mapcarcan (symbol_t name, object *args, object *env, mapfun_t fun) {
   args = cdr(args);
   object *params = cons(NULL, NULL);
   push(params,GCStack);
-  object *head = cons(NULL, NULL); 
+  object *head = cons(NULL, NULL);
   push(head,GCStack);
   object *tail = head;
   // Make parameters
@@ -3044,7 +3412,7 @@ object *fn_divide (object *args, object *env) {
       else if (i == 1) return number(1);
       else return makefloat(1.0 / i);
     } else error(DIVIDE, notanumber, arg);
-  }    
+  }
   // Multiple arguments
   if (floatp(arg)) return divide_floats(args, arg->single_float);
   else if (integerp(arg)) {
@@ -3053,7 +3421,7 @@ object *fn_divide (object *args, object *env) {
       arg = car(args);
       if (floatp(arg)) {
         return divide_floats(args, result);
-      } else if (integerp(arg)) {       
+      } else if (integerp(arg)) {
         int i = arg->integer;
         if (i == 0) error2(DIVIDE, PSTR("division by zero"));
         if ((result % i) != 0) return divide_floats(args, result);
@@ -3062,7 +3430,7 @@ object *fn_divide (object *args, object *env) {
         args = cdr(args);
       } else error(DIVIDE, notanumber, arg);
     }
-    return number(result); 
+    return number(result);
   } else error(DIVIDE, notanumber, arg);
   return nil;
 }
@@ -3142,7 +3510,7 @@ object *fn_maxfn (object *args, object *env) {
     if (integerp(result) && integerp(arg)) {
       if ((arg->integer) > (result->integer)) result = arg;
     } else if ((checkintfloat(MAXFN, arg) > checkintfloat(MAXFN, result))) result = arg;
-    args = cdr(args); 
+    args = cdr(args);
   }
   return result;
 }
@@ -3156,7 +3524,7 @@ object *fn_minfn (object *args, object *env) {
     if (integerp(result) && integerp(arg)) {
       if ((arg->integer) < (result->integer)) result = arg;
     } else if ((checkintfloat(MINFN, arg) < checkintfloat(MINFN, result))) result = arg;
-    args = cdr(args); 
+    args = cdr(args);
   }
   return result;
 }
@@ -3280,7 +3648,7 @@ object *fn_zerop (object *args, object *env) {
   if (floatp(arg)) return ((arg->single_float) == 0.0) ? tee : nil;
   else if (integerp(arg)) return ((arg->integer) == 0) ? tee : nil;
   else error(ZEROP, notanumber, arg);
-  return nil; 
+  return nil;
 }
 
 object *fn_oddp (object *args, object *env) {
@@ -3404,7 +3772,7 @@ object *fn_expt (object *args, object *env) {
   object *arg1 = first(args); object *arg2 = second(args);
   float float1 = checkintfloat(EXPT, arg1);
   float value = log(abs(float1)) * checkintfloat(EXPT, arg2);
-  if (integerp(arg1) && integerp(arg2) && ((arg2->integer) > 0) && (abs(value) < 21.4875)) 
+  if (integerp(arg1) && integerp(arg2) && ((arg2->integer) > 0) && (abs(value) < 21.4875))
     return number(intpower(arg1->integer, arg2->integer));
   if (float1 < 0) error2(EXPT, PSTR("invalid result"));
   return makefloat(exp(value));
@@ -3481,7 +3849,7 @@ object *fn_stringp (object *args, object *env) {
 
 bool stringcompare (symbol_t name, object *args, bool lt, bool gt, bool eq) {
   object *arg1 = first(args); if (!stringp(arg1)) error(name, notastring, arg1);
-  object *arg2 = second(args); if (!stringp(arg2)) error(name, notastring, arg2); 
+  object *arg2 = second(args); if (!stringp(arg2)) error(name, notastring, arg2);
   arg1 = cdr(arg1);
   arg2 = cdr(arg2);
   while ((arg1 != NULL) || (arg2 != NULL)) {
@@ -3615,7 +3983,7 @@ object *fn_subseq (object *args, object *env) {
   return result;
 }
 
-object *fn_readfromstring (object *args, object *env) {   
+object *fn_readfromstring (object *args, object *env) {
   (void) env;
   object *arg = first(args);
   if (!stringp(arg)) error(READFROMSTRING, notastring, arg);
@@ -3624,7 +3992,7 @@ object *fn_readfromstring (object *args, object *env) {
   return read(gstr);
 }
 
-object *fn_princtostring (object *args, object *env) {   
+object *fn_princtostring (object *args, object *env) {
   (void) env;
   object *arg = first(args);
   object *obj = startstring(PRINCTOSTRING);
@@ -3633,7 +4001,7 @@ object *fn_princtostring (object *args, object *env) {
   return obj;
 }
 
-object *fn_prin1tostring (object *args, object *env) {   
+object *fn_prin1tostring (object *args, object *env) {
   (void) env;
   object *arg = first(args);
   object *obj = startstring(PRIN1TOSTRING);
@@ -3902,7 +4270,7 @@ object *fn_analogread (object *args, object *env) {
   checkanalogread(pin);
   return number(analogRead(pin));
 }
- 
+
 object *fn_analogwrite (object *args, object *env) {
   (void) env;
   int pin = checkinteger(ANALOGWRITE, first(args));
@@ -4047,13 +4415,13 @@ object *fn_format (object *args, object *env) {
     if (tilde) {
      if (ch == '}') {
         if (save == NULL) formaterr(formatstr, PSTR("no matching ~{"), n);
-        if (args == NULL) { args = cdr(save); save = NULL; } else n = bra; 
+        if (args == NULL) { args = cdr(save); save = NULL; } else n = bra;
         mute = false; tilde = false;
-      }      
+      }
       else if (!mute) {
         if (comma && quote) { pad = ch; comma = false, quote = false; }
         else if (ch == '\'') {
-          if (comma) quote = true; 
+          if (comma) quote = true;
           else formaterr(formatstr, PSTR("quote not valid"), n);
         }
         else if (ch == '~') { pfun('~'); tilde = false; }
@@ -4120,7 +4488,7 @@ object *fn_require (object *args, object *env) {
     }
     line = read(glibrary);
   }
-  return nil; 
+  return nil;
 }
 
 object *fn_listlibrary (object *args, object *env) {
@@ -4134,7 +4502,7 @@ object *fn_listlibrary (object *args, object *env) {
     }
     line = read(glibrary);
   }
-  return symbol(NOTHING); 
+  return symbol(NOTHING);
 }
 
 // Graphics functions
@@ -4837,7 +5205,7 @@ object *eval (object *form, object *env) {
   if (!tstflag(NOESC)) testescape();
 
   if (form == NULL) return nil;
-    
+
   if (form->type >= NUMBER && form->type <= STRING) return form;
 
   if (symbolp(form)) {
@@ -4858,7 +5226,7 @@ object *eval (object *form, object *env) {
 
   if (function == NULL) error(0, PSTR("illegal function"), nil);
   if (!listp(args)) error(0, PSTR("can't evaluate a dotted pair"), args);
-  
+
   // List starts with a symbol?
   if (symbolp(function)) {
     symbol_t name = function->name;
@@ -4909,7 +5277,7 @@ object *eval (object *form, object *env) {
 
     if (name < SPECIAL_FORMS) error2(name, PSTR("can't be used as a function"));
   }
-        
+
   // Evaluate the parameters - result in head
   object *fname = car(form);
   int TCstart = TC;
@@ -4926,10 +5294,10 @@ object *eval (object *form, object *env) {
     form = cdr(form);
     nargs++;
   }
-    
+
   function = car(head);
   args = cdr(head);
- 
+
   if (symbolp(function)) {
     symbol_t name = function->name;
     if (name >= ENDFUNCTIONS) error(0, PSTR("not valid here"), fname);
@@ -4940,7 +5308,7 @@ object *eval (object *form, object *env) {
   }
 
   if (consp(function)) {
-    
+
     if (issymbol(car(function), LAMBDA)) {
       form = closure(TCstart, fname->name, NULL, cdr(function), args, &env);
       pop(GCStack);
@@ -5060,7 +5428,7 @@ void pinthex (uint32_t i, pfun_t pfun) {
   #endif
   for (uint32_t d=p; d>0; d=d/16) {
     uint32_t j = i/d;
-    if (j!=0 || lead || d==1) { pfun((j<10) ? j+'0' : j+'W'); lead=1;}  
+    if (j!=0 || lead || d==1) { pfun((j<10) ? j+'0' : j+'W'); lead=1;}
     i = i - j*d;
   }
 }
@@ -5069,7 +5437,7 @@ void printhex4 (int i, pfun_t pfun) {
   int p = 0x1000;
   for (int d=p; d>0; d=d/16) {
     int j = i/d;
-    pfun((j<10) ? j+'0' : j + 'W'); 
+    pfun((j<10) ? j+'0' : j + 'W');
     i = i - j*d;
   }
   pfun(' ');
@@ -5090,7 +5458,7 @@ void pmantissa (float f, pfun_t pfun) {
     int d = (int)(i / mul);
     pfun(d + '0');
     i = i - d * mul;
-    if (i == 0) { 
+    if (i == 0) {
       if (!point) {
         for (int k=j; k<sig; k++) pfun('0');
         pfun('.'); pfun('0');
@@ -5113,9 +5481,9 @@ void pfloat (float f, pfun_t pfun) {
     e = floor(log(f) / 2.302585); // log10 gives wrong result
     f = f / pow(10, e);
   }
-  
+
   pmantissa (f, pfun);
-  
+
   // Exponent
   if (e != 0) {
     pfun('e');
@@ -5180,7 +5548,7 @@ void prin1object (object *form, pfun_t pfun) {
 // Read functions
 
 int glibrary () {
-  if (LastChar) { 
+  if (LastChar) {
     char temp = LastChar;
     LastChar = 0;
     return temp;
@@ -5189,10 +5557,12 @@ int glibrary () {
   return (c != 0) ? c : -1; // -1?
 }
 
-void loadfromlibrary (object *env) {   
+void loadfromlibrary (object *env) {
   GlobalStringIndex = 0;
   object *line = read(glibrary);
   while (line != NULL) {
+    printobject(line, pserial);
+    pfl(pserial);
     eval(line, env);
     line = read(glibrary);
   }
@@ -5286,7 +5656,7 @@ void processkey (char c) {
 }
 
 int gserial () {
-  if (LastChar) { 
+  if (LastChar) {
     char temp = LastChar;
     LastChar = 0;
     return temp;
@@ -5327,7 +5697,7 @@ object *nextitem (gfun_t gfun) {
 
   // Parse string
   if (ch == '"') return readstring('"', gfun);
-  
+
   // Parse symbol, character, or number
   int index = 0, base = 10, sign = 1;
   char *buffer = SymbolTop;
@@ -5384,7 +5754,7 @@ object *nextitem (gfun_t gfun) {
   int exponent = 0, esign = 1;
   buffer[2] = '\0'; buffer[3] = '\0'; buffer[4] = '\0'; buffer[5] = '\0'; // In case symbol is < 5 letters
   float divisor = 10.0;
-  
+
   while(!issp(ch) && ch != ')' && ch != '(' && index < bufmax) {
     buffer[index++] = ch;
     if (base == 10 && ch == '.' && !isexponent) {
@@ -5416,7 +5786,7 @@ object *nextitem (gfun_t gfun) {
   if (ch == ')' || ch == '(') LastChar = ch;
   if (isfloat && valid == 1) return makefloat(fresult * sign * pow(10, exponent * esign));
   else if (valid == 1) {
-    if (base == 10 && result > ((unsigned int)INT_MAX+(1-sign)/2)) 
+    if (base == 10 && result > ((unsigned int)INT_MAX+(1-sign)/2))
       return makefloat((float)result*sign);
     return number(result*sign);
   } else if (base == 0) {
@@ -5428,7 +5798,7 @@ object *nextitem (gfun_t gfun) {
     }
     error2(0, PSTR("unknown character"));
   }
-  
+
   int x = builtin(buffer);
   if (x == NIL) return nil;
   if (x < ENDFUNCTIONS) return newsymbol(x);
@@ -5466,7 +5836,7 @@ object *read (gfun_t gfun) {
   if (item == (object *)KET) error2(0, PSTR("incomplete list"));
   if (item == (object *)BRA) return readrest(gfun);
   if (item == (object *)DOT) return read(gfun);
-  if (item == (object *)QUO) return cons(symbol(QUOTE), cons(read(gfun), NULL)); 
+  if (item == (object *)QUO) return cons(symbol(QUOTE), cons(read(gfun), NULL));
   return item;
 }
 
